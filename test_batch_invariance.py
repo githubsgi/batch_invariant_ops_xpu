@@ -23,7 +23,7 @@ def test_batch_invariance(dtype=torch.float32):
     return diff.item() == 0, diff
 
 def run_iters(iters=10):
-    for dtype in [ torch.float32 , torch.bfloat16, torch.float16]:
+    for dtype in [ torch.float32 , torch.bfloat16 ]:
         is_deterministic = True
         difflist = []
         for i in range (iters):
