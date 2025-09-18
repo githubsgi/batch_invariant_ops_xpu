@@ -7,10 +7,10 @@ torch.set_default_device(device_type)
 with set_batch_invariant_mode(True):
     pass
 
-def test_batch_invariance():
+def test_batch_invariance(dtype=torch.float32):
     B, D = 2048, 4096
-    a = torch.linspace(-100, 100, B*D).reshape(B, D)
-    b = torch.linspace(-100, 100, D*D).reshape(D, D)
+    a = torch.linspace(-100, 100, B*D, dtype=dtype).reshape(B, D)
+    b = torch.linspace(-100, 100, D*D, dtype=dtype).reshape(D, D)
 
     # Method 1: Matrix-vector multiplication (batch size 1)
     out1 = torch.mm(a[:1], b)
@@ -28,10 +28,14 @@ print("Standard PyTorch:")
 with set_batch_invariant_mode(False):
     is_deterministic = test_batch_invariance()
     print(f"Deterministic: {is_deterministic}")
+    is_deterministic = test_batch_invariance(dtype=torch.bfloat16)
+    print(f"Deterministic: {is_deterministic}")
 
 # Test with batch-invariant operations
 print("\nBatch-Invariant Mode:")
 with set_batch_invariant_mode(True):
     is_deterministic = test_batch_invariance()
+    print(f"Deterministic: {is_deterministic}")
+    is_deterministic = test_batch_invariance(dtype=torch.bfloat16)
     print(f"Deterministic: {is_deterministic}")
 
