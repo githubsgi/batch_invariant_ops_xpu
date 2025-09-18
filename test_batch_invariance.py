@@ -23,11 +23,11 @@ def test_batch_invariance(dtype=torch.float32):
     return diff.item() == 0, diff
 
 def run_iters(iters=10):
-    is_deterministic = True
-    difflist = []
     for dtype in [ torch.float32 , torch.bfloat16, torch.float16]:
+        is_deterministic = True
+        difflist = []
         for i in range (iters):
-            isd, df = test_batch_invariance()
+            isd, df = test_batch_invariance(dtype)
             is_deterministic = is_deterministic and isd
             difflist.append(df)
         print( f"Deterministic: {is_deterministic} run-to-run max/min/diff {max(difflist)}/{min(difflist)}/{max(difflist)-min(difflist)} for {dtype} in {iters} iterations")
