@@ -20,22 +20,24 @@ def test_batch_invariance(dtype=torch.float32):
 
     # Check if results are identical
     diff = (out1 - out2).abs().max()
-    print(f"Difference: {diff.item()}")
-    return diff.item() == 0
+    return diff.item() == 0, diff
+
+def run_iters(iters=10):
+    is_deterministic = True
+    difflist = []
+    for dtype in [ torch.float32 , torch.bfloat16, torch.float16]:
+        for i in range (iters):
+            isd, df = test_batch_invariance()
+            is_deterministic = is_deterministic and isd
+            difflist.append(df)
+        print( f"Deterministic: {is_deterministic} run-to-run diff max/min {max(difflist)}/{min(difflist)} for {dtype} in {iters} iterations")
+
 
 # Test with standard PyTorch (likely to show differences)
 print("Standard PyTorch:")
 with set_batch_invariant_mode(False):
-    is_deterministic = test_batch_invariance()
-    print(f"Deterministic: {is_deterministic}")
-    is_deterministic = test_batch_invariance(dtype=torch.bfloat16)
-    print(f"Deterministic: {is_deterministic}")
-
+    run_iters()
 # Test with batch-invariant operations
 print("\nBatch-Invariant Mode:")
 with set_batch_invariant_mode(True):
-    is_deterministic = test_batch_invariance()
-    print(f"Deterministic: {is_deterministic}")
-    is_deterministic = test_batch_invariance(dtype=torch.bfloat16)
-    print(f"Deterministic: {is_deterministic}")
-
+    run_iters()
