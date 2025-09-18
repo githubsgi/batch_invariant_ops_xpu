@@ -30,7 +30,7 @@ def run_iters(iters=10):
             isd, df = test_batch_invariance(dtype)
             is_deterministic = is_deterministic and isd
             difflist.append(df)
-        print( f"Deterministic: {is_deterministic} run-to-run max/min/diff {max(difflist)}/{min(difflist)}/{max(difflist)-min(difflist)} for {dtype} in {iters} iterations")
+        print( f"Batch Deterministic: {is_deterministic} run-to-run max/min/diff {max(difflist)}/{min(difflist)}/{max(difflist)-min(difflist)} for {dtype} in {iters} iterations")
 
 
 # Test with standard PyTorch (likely to show differences)
